@@ -1,15 +1,76 @@
-var x = 140;
-var y = 70;
-var squares = x * y;
-var maze = [];
-var walls = [];
-var halls = [];
-var unproccessed = [];
-var proccessed = [];
-var walked = [1];
-var current = 1;
+var x;
+var y;
+var squares;
+var maze;
+var walls;
+var halls;
+var unproccessed;
+var proccessed;
+var walked;
+var current;
+var startTime;
+var endTime;
+var mazeReady = false;
+var points
+
 
 $(document).ready(function() {
+	$('#suggestedForm').submit(function() {
+		go();
+		return fasle;
+	});
+	$('#customForm').submit(function() {
+		go();
+		return fasle;
+	});
+});
+var newMaze = function() {
+	$('#loading').hide();
+	//$('ul.tabs').tabs('select_tab', 'suggested');
+	$('#suggested').show();
+	$('#top').slideDown().then(function() {
+		$('#bottom').hide();
+	});
+}
+
+var go = function() {
+	var suggested = ($('ul.tabs .active').attr('href') == '#suggested');
+	// console.log(suggested);
+	if (suggested) {
+		var xy = parseInt($('input[name="size"]:checked').val());
+		// console.log(xy);
+
+		$('#suggested').hide();
+		$('#custom').hide();
+		$('#loading').show();
+		generateMaze(xy, xy);
+	} else{
+		var newX = parseInt($('#width').val());
+		var newY = parseInt($('#height').val());
+		var valid = (newX > 2 && newY > 2);
+		if (valid) {
+			$('#suggested').hide();
+			$('#custom').hide();
+			$('#loading').show();
+			generateMaze(newX, newY);
+		};
+	};
+}
+
+var generateMaze = function(givenX,givenY) {
+	mazeReady = false;
+	points = 0;
+	$('#score').text(points);
+	x = givenX;
+	y = givenY;
+	squares = x * y;
+	maze = [];
+	walls = [];
+	halls = [];
+	unproccessed = [];
+	proccessed = [];
+	walked = [1];
+	current = 1;
 
 	for (var i = 1; i <= squares; i++) {
 		maze.push([i]);
@@ -59,6 +120,7 @@ $(document).ready(function() {
 	// console.log(walls);
 	var index = 1
 	var table = $('#mazeTable');
+	table.html('');
 	for (var i = 0; i < y; i++) {
 		var row = $('<tr>');
 		for (var j = 0; j < x; j++) {
@@ -93,16 +155,23 @@ $(document).ready(function() {
 	};
 	$('#1').css("border-left", "0").css('background-color', 'green');
 	$('#'+squares).css("border-right", "0");
+	$('#top').slideUp();
+	$('#bottom').show();
+	mazeReady = true;
+}
 
-	$(document).on('keydown', function(e) {
-		//console.log(e.keyCode);
-		if ([37,38,39,40].indexOf(e.keyCode) != -1) {
-			move(e.keyCode);
-		};
-	});
+$(document).on('keydown', function(e) {
+	// console.log(e.keyCode);
+	if (mazeReady && [37,38,39,40].indexOf(e.keyCode) != -1) {
+		move(e.keyCode);
+	};
 });
 
 var move = function(k) {
+	if (current == 1) {
+		var d = new Date();
+		startTime = d.getTime();
+	};
 	var next;
 	switch (k) {
 		case 37:
@@ -131,13 +200,31 @@ var move = function(k) {
 		$('#'+next).css('background-color', 'green');
 		if (walked.indexOf(next) != -1) {
 			$('#'+current).css('background-color', 'yellow');
+			points++;
+			$('#score').text(points);
 		};
 		walked.push(next);
 		current = next;
 		if (current == squares) {
-			alert('you win!!!');
+			var d = new Date();
+			endTime = d.getTime();
+			end();
 		};
 	};
+}
+
+var end = function() {
+	var games = new Firebase('https://maze-generator.firebaseio.com/games');
+	games.push({
+				'start': startTime,
+				'end': endTime,
+				'walls': walls,
+				'halls': halls,
+				'walked': walked,
+				'points': points
+				});
+	Materialize.toast('You win!!! it took you only ' + ((endTime - startTime)/1000) + ' seconds and you made ' + points + ' mistake' + ((points == 1) ? '' : 's') , 5000);
+
 }
 
 

@@ -5,9 +5,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1.0, user-scalable=0">
     <title>Maze Generator</title>
+
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     
     <!-- jQuery Libraries -->
     <script src="https://code.jquery.com/jquery.min.js"></script>
+
+    <!-- Materialize Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/css/materialize.min.css">
+
+    <!-- Materialize Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/js/materialize.min.js"></script>
+
+    <!-- Angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
+
+    <!-- Angular Materialize Library -->
+    <script src="assets/js/angular-materialize.js"></script>
+
+    <!-- Add ui-router library here -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
+
+    <!-- Firebase -->
+    <script src="https://cdn.firebase.com/js/client/2.3.0/firebase.js"></script>
+
+    <!-- AngularFire -->
+    <script src="https://cdn.firebase.com/libs/angularfire/1.1.3/angularfire.min.js"></script>
+
 
     <!-- Custom code -->
     <link href = "assets/css/app.css" rel="stylesheet" type = "text/css"/>
@@ -15,6 +41,117 @@
     
   </head>
   <body>
-    <table id="mazeTable"></table>
-  </body>
+    <div id="top" class="intro deep-orange lighten-2 z-depth-1">
+      <h1 class="grey-text text-lighten-5">Alex's Maze Generator</h1>
+      <div class="row">
+        <div class="col s12 m6 offset-m3">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">Generate a Maze</span>
+              <div class="row" id="">
+                <div class="col s12">
+                  <ul class="tabs transparent white-text">
+                    <li class="tab col s6"><a class="active" href="#suggested">Suggested</a></li>
+                    <li class="tab col s6"><a href="#custom">Custom</a></li>
+                  </ul>
+                </div>
+                <div id="suggested" class="col s12">
+                  <form id="suggestedForm" class="col s12 offset-m2 mazeSelect">
+                    <p>
+                      <input name="size" type="radio" id="3x3" value="3"/>
+                      <label for="3x3">3 x 3</label>
+                    </p>
+                    <p>
+                      <input name="size" type="radio" id="6x6" value="6"/>
+                      <label for="6x6">6 x 6</label>
+                    </p>
+                    <p>
+                      <input name="size" type="radio" id="9x9" value="9" checked="checked"/>
+                      <label for="9x9">9 x 9</label>
+                    </p>
+                      <p>
+                        <input name="size" type="radio" id="12x12" value="12"/>
+                        <label for="12x12">12 x 12</label>
+                    </p>
+                      <p>
+                        <input name="size" type="radio" id="24x24" value="24"/>
+                        <label for="24x24">24 x 24</label>
+                    </p>
+                      <p>
+                        <input name="size" type="radio" id="48x48" value="48"/>
+                        <label for="48x48">48 x 48</label>
+                    </p>
+                  </form>
+                </div>
+                <div id="custom" class="col s12">
+                  <div class="card-panel red accent-2 warning-box hoverable" 
+                      onclick="Materialize.toast('If you think about it, picking 100x100 makes 10,000 squares.  These squares must each be processed 4 times, as this is how the script works. while a single cycle takes almost no time at all, 40,000 cycles add up and can take a significant time.  If it seems to be taking a long time, just be patient as it will work, there are no endless loops or any functions that take forever to run, it just ahs to calculate something for each square and wall.', 30000,'flow-text')"
+                      >
+                    <i class="medium left material-icons">info_outline</i>
+                    <span class="white-text left-align">Sizes bigger than 100 x 100 can take a very long time to calculate, and may crash your web browser, use this feature at your own risk</span>
+                  </div>
+                  <form id="customForm">
+                    <div class="input-field">
+                      <input id="height" type="number" class="validate" min="3">
+                      <label for="height">Height</label>
+                    </div>
+                    <div class="input-field">
+                      <input id="width" type="number" class="validate" min="3">
+                      <label for="width">Width</label>
+                    </div>
+                  </form>
+                </div>
+                <div id="loading" class="col s12">
+                  <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-white-only">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="card-action">
+                <a class="waves-effect waves-light btn white blue-grey-text text-darken-1 hoverable" onclick="go()">Generate</a>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12 m6 offset-m3">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">Directions:</span>
+              <div class="row" id="">
+                <span class="">The goal is to get as few points as possible, but completing the maze with the least errors</span>
+              </div>
+              <div class="card-action">
+                <a class="waves-effect waves-light btn white blue-grey-text text-darken-1 hoverable" onclick="go()">Generate</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="bottom">
+      <nav>
+        <div class="nav-wrapper">
+          <a href="#" class="brand-logo">Alex's Maze Generator</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li>Points: <span id="score"></span> </li>
+            <li><a onclick="go()">New</a></li>
+            <li><a onclick="newMaze()">New Size</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div id="mazeDiv">
+        <table id="mazeTable"></table>
+      </div>
+    </div>
+    </body>
 </html>
