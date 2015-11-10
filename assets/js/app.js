@@ -214,6 +214,7 @@ var move = function(k) {
 }
 
 var end = function() {
+	mazeReady = false;
 	var games = new Firebase('https://maze-generator.firebaseio.com/games');
 	games.push({
 				'start': startTime,
