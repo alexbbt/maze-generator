@@ -26,7 +26,7 @@ $(document).ready(function() {
 });
 var newMaze = function() {
 	$('#loading').hide();
-	//$('ul.tabs').tabs('select_tab', 'suggested');
+	$('ul.tabs').tabs('select_tab', 'suggested');
 	$('#suggested').show();
 	$('#top').slideDown().then(function() {
 		$('#bottom').hide();
