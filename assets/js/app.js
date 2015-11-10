@@ -219,10 +219,13 @@ var end = function() {
 	games.push({
 				'start': startTime,
 				'end': endTime,
+				'time': ((endTime -startTime)/1000),
 				'walls': walls,
 				'halls': halls,
 				'walked': walked,
-				'points': points
+				'points': points,
+				'x':x,
+				'y':y
 				});
 	Materialize.toast('You win!!! it took you only ' + ((endTime - startTime)/1000) + ' seconds and you made ' + points + ' mistake' + ((points == 1) ? '' : 's') , 5000);
 
