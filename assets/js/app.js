@@ -1,0 +1,205 @@
+var x = 140;
+var y = 70;
+var squares = x * y;
+var maze = [];
+var walls = [];
+var halls = [];
+var unproccessed = [];
+var proccessed = [];
+var walked = [1];
+var current = 1;
+
+$(document).ready(function() {
+
+	for (var i = 1; i <= squares; i++) {
+		maze.push([i]);
+	};
+	// console.log(maze);
+
+
+	for (var a = 1; a <= squares; a++) {
+		// console.log('a ' + a);
+		var b = [a-x,a+x];
+		if (a % x != 0) {b.push(a+1)};
+		if (a % x != 1) {b.push(a-1)};
+		for (var i = 0; i < b.length; i++) {
+			// console.log(b[i]);
+			if (b[i] > 0 && b[i] <= squares) {
+				// console.log('used');
+				// console.log(unproccessed);
+				// console.log(arrayIndex(unproccessed,[a,b[i]]));
+				// console.log(arrayIndex(unproccessed,[b[i],a]));
+				// console.log(a);
+				// console.log(b[i]);
+				if (arrayIndex(unproccessed,[a,b[i]]) == -1 && arrayIndex(unproccessed,[b[i],a]) == -1) {
+					unproccessed.push([a,b[i]]);
+				};
+			};
+		};
+	};
+
+	// console.log(unproccessed);
+
+	while (maze.length > 1) {
+		var i = Math.floor(Math.random() * unproccessed.length);
+		// console.log('a ' + a);
+		var a = unproccessed[i][0];
+		var b = unproccessed[i][1]
+		unproccessed.splice(i,1);
+		proccess(a,b);
+		proccessed.push([a,b]);
+	}
+	while(unproccessed.length > 0) {
+		walls.push(unproccessed[0]);
+		unproccessed.splice(0,1);
+	};
+
+	// console.log(unproccessed);
+	// console.log(maze);
+	// console.log(walls);
+	var index = 1
+	var table = $('#mazeTable');
+	for (var i = 0; i < y; i++) {
+		var row = $('<tr>');
+		for (var j = 0; j < x; j++) {
+			var tuple = $('<td>');
+			tuple.attr('id', index);
+			tuple.attr('class','cell');
+			// tuple.text(index);
+			index++;
+			row.append(tuple);
+		};
+		table.append(row);
+		// console.log(row);
+	};
+	for (var i = 0; i < walls.length; i++) {
+		// console.log(walls[i][0] +' '+ walls[i][1]);
+		// console.log(Math.min(walls[i][0] , walls[i][1]));
+		if ([-1,1].indexOf(walls[i][0] - walls[i][1]) != -1) {
+			// console.log('sameline');
+			$('#'+Math.min(walls[i][0] , walls[i][1])).css("border-right", "solid black 5px");
+		} else if ([-x,x].indexOf(walls[i][0] - walls[i][1]) != -1) {
+			// console.log('next line');
+			$('#'+Math.min(walls[i][0] , walls[i][1])).css("border-bottom", "solid black 5px");
+		};
+	};
+	for (var i = 1; i <= x; i++) {
+		$('#'+i).css("border-top", "solid black 5px");
+		$('#'+(i+((y-1)*x))).css("border-bottom", "solid black 5px");
+	};
+	for (var i = 1; i <= y; i++) {
+		$('#'+(i*x-(x-1))).css("border-left", "solid black 5px");
+		$('#'+(i*x)).css("border-right", "solid black 5px");
+	};
+	$('#1').css("border-left", "0").css('background-color', 'green');
+	$('#'+squares).css("border-right", "0");
+
+	$(document).on('keydown', function(e) {
+		//console.log(e.keyCode);
+		if ([37,38,39,40].indexOf(e.keyCode) != -1) {
+			move(e.keyCode);
+		};
+	});
+});
+
+var move = function(k) {
+	var next;
+	switch (k) {
+		case 37:
+			// console.log('left');
+			next = current - 1;
+			break;
+		case 38:
+			// console.log('up');
+			next = current - x;
+			break;
+		case 39:
+			// console.log('right');
+			next = current + 1;
+			break;
+		case 40:
+			// console.log('down');
+			next = current + x;
+			break;
+	}
+	// console.log(next);
+	var can = (arrayIndex(halls, [current,next]) != -1 || arrayIndex(halls, [next,current]) != -1);
+	// console.log(can);
+	if (can) {
+		
+		$('#'+current).css('background-color', '#98FB98');
+		$('#'+next).css('background-color', 'green');
+		if (walked.indexOf(next) != -1) {
+			$('#'+current).css('background-color', 'yellow');
+		};
+		walked.push(next);
+		current = next;
+		if (current == squares) {
+			alert('you win!!!');
+		};
+	};
+}
+
+
+var find = function(a) {
+	var item;
+	for (var i = 0; i < maze.length; i++) {
+		if (maze[i].indexOf(a) != -1) {
+			item = maze[i];
+		};
+	};
+	return item;
+}
+var proccess = function(numA,numB) {
+	if (numA==numB) {return};
+	var a = find(numA);
+	var b = find(numB);
+	// console.log('----');
+	// console.log(numA);
+	// console.log(a);
+	// console.log(numB);
+	// console.log(b);
+	if (a === b) {
+		// console.log('wall');
+		walls.push([numA, numB]);
+	} else {
+		// console.log('hall');
+		halls.push([numA, numB]);
+		union(a,b);
+		// console.log(a);
+	};
+	// console.log('----');
+	return maze;	
+}
+var union = function(a,b) {
+	if (a !== b) {
+		for (var i = 0; i < b.length; i++) {
+			a.push(b[i]);
+		};
+		maze.splice(maze.indexOf(b),1);
+		//remove(numB);
+	};
+	return maze;	
+}
+
+
+function arrayIndex(a,b) {
+	for (var i = 0; i < a.length; i++) {
+		if (arraysEqual(a[i], b)) { return i;};
+	};
+	return -1;
+}
+
+function arraysEqual(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length != b.length) return false;
+
+    // If you don't care about the order of the elements inside
+    // the array, you should sort both arrays here.
+
+    for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+    }
+    return true;
+}
