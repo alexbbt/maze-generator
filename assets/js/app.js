@@ -30,6 +30,7 @@ var newMaze = function() {
 	$('#suggested').show();
 	$('#top').slideDown();
 	$('#bottom').hide();
+	$('body').css('overflow', 'scroll');
 }
 
 var go = function() {
@@ -156,11 +157,24 @@ var generateMaze = function(givenX,givenY) {
 	$('#'+squares).css("border-right", "0");
 	$('#top').slideUp();
 	$('#bottom').show();
+	$('body').css('overflow', 'hidden');
 	mazeReady = true;
 	$('td').mouseover(function(){
   	//console.log(this.id);
   	move(parseInt(this.id));
-	});
+	}).bind('touchend', function(e) {
+    e.preventDefault();
+    //console.log(this.id);
+    move(parseInt(this.id));
+  }).bind('touchmove', function(e){
+  	e.preventDefault();
+  	console.log(e.touches[0]);
+  	// console.log(client.X);
+  	// console.log(client.Y);
+  	if (parseInt(this.id) == current) {
+  		// console.log(document.elementFromPoint(window.x, window.y));
+  	};
+  });
 }
 
 $(document).on('keydown', function(e) {
@@ -168,6 +182,11 @@ $(document).on('keydown', function(e) {
 	if (mazeReady && [37,38,39,40].indexOf(e.keyCode) != -1) {
 		key(e.keyCode);
 	};
+}).mousemove(function(e) {
+    window.x = e.pageX;
+    window.y = e.pageY;
+    //console.log(window.x);
+    //console.log(window.y);
 });
 
 
