@@ -166,14 +166,6 @@ var generateMaze = function(givenX,givenY) {
     e.preventDefault();
     //console.log(this.id);
     move(parseInt(this.id));
-  }).bind('touchmove', function(e){
-  	e.preventDefault();
-  	alert(e.touches[0]);
-  	// console.log(client.X);
-  	// console.log(client.Y);
-  	if (parseInt(this.id) == current) {
-  		// console.log(document.elementFromPoint(window.x, window.y));
-  	};
   });
 }
 
@@ -182,11 +174,6 @@ $(document).on('keydown', function(e) {
 	if (mazeReady && [37,38,39,40].indexOf(e.keyCode) != -1) {
 		key(e.keyCode);
 	};
-}).mousemove(function(e) {
-    window.x = e.pageX;
-    window.y = e.pageY;
-    //console.log(window.x);
-    //console.log(window.y);
 });
 
 
