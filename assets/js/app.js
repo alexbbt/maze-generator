@@ -28,9 +28,8 @@ var newMaze = function() {
 	$('#loading').hide();
 	$('ul.tabs').tabs('select_tab', 'suggested');
 	$('#suggested').show();
-	$('#top').slideDown().then(function() {
-		$('#bottom').hide();
-	});
+	$('#top').slideDown();
+	$('#bottom').hide();
 }
 
 var go = function() {
@@ -158,20 +157,22 @@ var generateMaze = function(givenX,givenY) {
 	$('#top').slideUp();
 	$('#bottom').show();
 	mazeReady = true;
+	$('td').mouseover(function(){
+  	//console.log(this.id);
+  	move(parseInt(this.id));
+	});
 }
 
 $(document).on('keydown', function(e) {
 	// console.log(e.keyCode);
 	if (mazeReady && [37,38,39,40].indexOf(e.keyCode) != -1) {
-		move(e.keyCode);
+		key(e.keyCode);
 	};
 });
 
-var move = function(k) {
-	if (current == 1) {
-		var d = new Date();
-		startTime = d.getTime();
-	};
+
+
+var key = function(k) {
 	var next;
 	switch (k) {
 		case 37:
@@ -191,7 +192,16 @@ var move = function(k) {
 			next = current + x;
 			break;
 	}
+	move(next);
+}
+var move = function(next) {
+	if (current == 1) {
+		var d = new Date();
+		startTime = d.getTime();
+	};
 	// console.log(next);
+	// console.log(arrayIndex(halls, [current,next]));
+	// console.log(arrayIndex(halls, [next,current]));
 	var can = (arrayIndex(halls, [current,next]) != -1 || arrayIndex(halls, [next,current]) != -1);
 	// console.log(can);
 	if (can) {
