@@ -243,11 +243,7 @@ var move = function(next) {
 var end = function() {
 	mazeReady = false;
 	var games = new Firebase('https://maze-generator.firebaseio.com/games');
-	vex.dialog.prompt({
-	  message: 'You win!!! it took you only ' + ((endTime - startTime)/1000) + ' seconds and you made ' + points + ' mistake' + ((points == 1) ? '' : 's') + '<br>Woulds you like to save this to a username?' ,
-	  placeholder: 'User Name',
-	  callback: function(value) {
-	    games.push({
+	var game = games.push({
 			'start': startTime,
 			'end': endTime,
 			'time': ((endTime -startTime)/1000),
@@ -256,8 +252,23 @@ var end = function() {
 			'walked': walked,
 			'points': points,
 			'x':x,
-			'y':y,
-			'user': value
+			'y':y
+		});
+	vex.dialog.prompt({
+	  message: 'You win!!! it took you only ' + ((endTime - startTime)/1000) + ' seconds and you made ' + points + ' mistake' + ((points == 1) ? '' : 's') + '<br>Woulds you like to save this to a username?' ,
+	  placeholder: 'User Name',
+	  callback: function(value) {
+	    game.set({
+	    	'start': startTime,
+				'end': endTime,
+				'time': ((endTime -startTime)/1000),
+				'walls': walls,
+				'halls': halls,
+				'walked': walked,
+				'points': points,
+				'x':x,
+				'y':y,
+				'user':value
 			});
 	  }
 	});
