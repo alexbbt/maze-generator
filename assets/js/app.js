@@ -242,8 +242,8 @@ var move = function(next) {
 
 var end = function() {
 	mazeReady = false;
-	var games = new Firebase('https://maze-generator.firebaseio.com/games');
-	var game = games.push({
+	var fb = new Firebase('https://maze-generator.firebaseio.com/');
+	fb.child('games').push({
 			'start': startTime,
 			'end': endTime,
 			'time': ((endTime -startTime)/1000),
@@ -258,7 +258,7 @@ var end = function() {
 	  message: 'You win!!! it took you only ' + ((endTime - startTime)/1000) + ' seconds and you made ' + points + ' mistake' + ((points == 1) ? '' : 's') + '<br>Woulds you like to save this to a username?' ,
 	  placeholder: 'User Name',
 	  callback: function(value) {
-	    game.set({
+	  	fb.child('usergames').child(value).push({
 	    	'start': startTime,
 				'end': endTime,
 				'time': ((endTime -startTime)/1000),
