@@ -216,19 +216,24 @@ var move = function(k) {
 var end = function() {
 	mazeReady = false;
 	var games = new Firebase('https://maze-generator.firebaseio.com/games');
-	games.push({
-				'start': startTime,
-				'end': endTime,
-				'time': ((endTime -startTime)/1000),
-				'walls': walls,
-				'halls': halls,
-				'walked': walked,
-				'points': points,
-				'x':x,
-				'y':y
-				});
-	Materialize.toast('You win!!! it took you only ' + ((endTime - startTime)/1000) + ' seconds and you made ' + points + ' mistake' + ((points == 1) ? '' : 's') , 5000);
-
+	vex.dialog.prompt({
+	  message: 'You win!!! it took you only ' + ((endTime - startTime)/1000) + ' seconds and you made ' + points + ' mistake' + ((points == 1) ? '' : 's') + '<br>Woulds you like to save this to a username?' ,
+	  placeholder: 'User Name',
+	  callback: function(value) {
+	    games.push({
+			'start': startTime,
+			'end': endTime,
+			'time': ((endTime -startTime)/1000),
+			'walls': walls,
+			'halls': halls,
+			'walked': walked,
+			'points': points,
+			'x':x,
+			'y':y,
+			'user': value
+			});
+	  }
+	});
 }
 
 
