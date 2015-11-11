@@ -161,20 +161,20 @@ var generateMaze = function(givenX,givenY) {
 	mazeReady = true;
 	$('td').mouseover(function(){
   	//console.log(this.id);
-  	if ((mazeReady) {
+  	if (mazeReady) {
   		move(parseInt(this.id));
   	};
 	}).bind('touchend', function(e) {
     e.preventDefault();
     //console.log(this.id);
-    if ((mazeReady) {
+    if (mazeReady) {
   		move(parseInt(this.id));
   	};
   }).bind('touchmove', function(e){
 		e.preventDefault();
 		//console.log("(" + e.originalEvent.changedTouches[0].pageX + ", " + e.originalEvent.changedTouches[0].pageY + ")");
 		//console.log(document.elementFromPoint(e.originalEvent.changedTouches[0].pageX, e.originalEvent.changedTouches[0].pageY).id);
-		if ((mazeReady) {
+		if (mazeReady) {
   		move(parseInt(document.elementFromPoint(e.originalEvent.changedTouches[0].pageX, e.originalEvent.changedTouches[0].pageY).id));
   	};
 	});
