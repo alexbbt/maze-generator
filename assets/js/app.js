@@ -12,7 +12,7 @@ var startTime;
 var endTime;
 var mazeReady = false;
 var points
-
+var mouseDown = 0;
 
 $(document).ready(function() {
 	$('#suggestedForm').submit(function() {
@@ -23,6 +23,12 @@ $(document).ready(function() {
 		go();
 		return fasle;
 	});
+	document.body.onmousedown = function() { 
+	  ++mouseDown;
+	}
+	document.body.onmouseup = function() {
+	  --mouseDown;
+	}
 });
 var newMaze = function() {
 	$('#loading').hide();
@@ -161,23 +167,24 @@ var generateMaze = function(givenX,givenY) {
 	mazeReady = true;
 	$('td').mouseover(function(){
   	//console.log(this.id);
-  	if (mazeReady) {
+  	if (mazeReady && mouseDown) {
   		move(parseInt(this.id));
-  	};
-	}).bind('touchend', function(e) {
-    e.preventDefault();
-    //console.log(this.id);
-    if (mazeReady) {
-  		move(parseInt(this.id));
-  	};
-  }).bind('touchmove', function(e){
-		e.preventDefault();
-		//console.log("(" + e.originalEvent.changedTouches[0].pageX + ", " + e.originalEvent.changedTouches[0].pageY + ")");
-		//console.log(document.elementFromPoint(e.originalEvent.changedTouches[0].pageX, e.originalEvent.changedTouches[0].pageY).id);
-		if (mazeReady) {
-  		move(parseInt(document.elementFromPoint(e.originalEvent.changedTouches[0].pageX, e.originalEvent.changedTouches[0].pageY).id));
   	};
 	});
+	// .bind('touchend', function(e) {
+ //    e.preventDefault();
+ //    //console.log(this.id);
+ //    if (mazeReady) {
+ //  		move(parseInt(this.id));
+ //  	};
+ //  }).bind('touchmove', function(e){
+	// 	e.preventDefault();
+	// 	//console.log("(" + e.originalEvent.changedTouches[0].pageX + ", " + e.originalEvent.changedTouches[0].pageY + ")");
+	// 	//console.log(document.elementFromPoint(e.originalEvent.changedTouches[0].pageX, e.originalEvent.changedTouches[0].pageY).id);
+	// 	if (mazeReady) {
+ //  		move(parseInt(document.elementFromPoint(e.originalEvent.changedTouches[0].pageX, e.originalEvent.changedTouches[0].pageY).id));
+ //  	};
+	// });
 }
 
 $(document).on('keydown', function(e) {
@@ -254,23 +261,24 @@ var end = function() {
 			'x':x,
 			'y':y
 		});
-	vex.dialog.prompt({
-	  message: 'You win!!! it took you only ' + ((endTime - startTime)/1000) + ' seconds and you made ' + points + ' mistake' + ((points == 1) ? '' : 's') + '<br>Woulds you like to save this to a username?' ,
-	  placeholder: 'User Name',
-	  callback: function(value) {
-	  	fb.child('usergames').child(value).push({
-	    	'start': startTime,
-				'end': endTime,
-				'time': ((endTime -startTime)/1000),
-				'walls': walls,
-				'halls': halls,
-				'walked': walked,
-				'points': points,
-				'x':x,
-				'y':y,
-				'user':value
-			});
-	  }
+	vex.dialog.alert({
+	  message: 'You win!!! it took you only ' + ((endTime - startTime)/1000) + ' seconds and you made ' + points + ' mistake' + ((points == 1) ? '' : 's'),
+	  // + '<br>Woulds you like to save this to a username?' ,
+	  // placeholder: 'User Name',
+	  // callback: function(value) {
+	  // 	fb.child('usergames').child(value).push({
+	  //   	'start': startTime,
+			// 	'end': endTime,
+			// 	'time': ((endTime -startTime)/1000),
+			// 	'walls': walls,
+			// 	'halls': halls,
+			// 	'walked': walked,
+			// 	'points': points,
+			// 	'x':x,
+			// 	'y':y,
+			// 	'user':value
+			// });
+	  // }
 	});
 }
 
