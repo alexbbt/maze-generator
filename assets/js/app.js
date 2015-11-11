@@ -168,7 +168,7 @@ var generateMaze = function(givenX,givenY) {
     move(parseInt(this.id));
   }).bind('touchmove', function(e){
   	e.preventDefault();
-  	console.log(e.touches[0]);
+  	alert(e.touches[0]);
   	// console.log(client.X);
   	// console.log(client.Y);
   	if (parseInt(this.id) == current) {
