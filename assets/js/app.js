@@ -222,6 +222,24 @@ var move = function(next) {
 }
 
 var end = function() {
+	
+	var seconds = (endTime - startTime) / 1000;
+	var minutes = seconds / 60;
+	var hours = minutes / 60;
+	var time = '';
+	hours = Math.floor(hours);
+	if (hours >= 1) {
+		time = time + hours + ' Hours ';
+	}
+	minutes = Math.floor(minutes - (hours * 60));
+	if (minutes >= 1) {
+		time = time + minutes + ' minutes ';
+	}
+	seconds = (seconds - (minutes * 60) - (hours * 60 * 60));
+	if (seconds >= 1) {
+		time = time + seconds + ' seconds ';
+	}
+
 	mazeReady = false;
 	var fb = new Firebase('https://maze-generator.firebaseio.com/');
 	fb.child('games').push({
@@ -236,7 +254,7 @@ var end = function() {
 			'y':y
 		});
 	vex.dialog.alert({
-	  message: 'You win!!! it took you only ' + ((endTime - startTime)/1000) + ' seconds and you made ' + points + ' mistake' + ((points == 1) ? '' : 's'),
+	  message: 'You win!!! it took you only ' + time + ' and you made ' + points + ' mistake' + ((points == 1) ? '' : 's'),
 	});
 }
 
