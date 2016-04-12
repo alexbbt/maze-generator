@@ -30,6 +30,7 @@ $(document).ready(function() {
 	  --mouseDown;
 	}
 });
+
 var newMaze = function() {
 	$('#loading').hide();
 	$('ul.tabs').tabs('select_tab', 'suggested');
@@ -41,10 +42,8 @@ var newMaze = function() {
 
 var go = function() {
 	var suggested = ($('ul.tabs .active').attr('href') == '#suggested');
-	// console.log(suggested);
 	if (suggested) {
 		var xy = parseInt($('input[name="size"]:checked').val());
-		// console.log(xy);
 
 		$('#suggested').hide();
 		$('#custom').hide();
@@ -81,23 +80,13 @@ var generateMaze = function(givenX,givenY) {
 	for (var i = 1; i <= squares; i++) {
 		maze.push([i]);
 	};
-	// console.log(maze);
-
 
 	for (var a = 1; a <= squares; a++) {
-		// console.log('a ' + a);
 		var b = [a-x,a+x];
 		if (a % x != 0) {b.push(a+1)};
 		if (a % x != 1) {b.push(a-1)};
 		for (var i = 0; i < b.length; i++) {
-			// console.log(b[i]);
 			if (b[i] > 0 && b[i] <= squares) {
-				// console.log('used');
-				// console.log(unproccessed);
-				// console.log(arrayIndex(unproccessed,[a,b[i]]));
-				// console.log(arrayIndex(unproccessed,[b[i],a]));
-				// console.log(a);
-				// console.log(b[i]);
 				if (arrayIndex(unproccessed,[a,b[i]]) == -1 && arrayIndex(unproccessed,[b[i],a]) == -1) {
 					unproccessed.push([a,b[i]]);
 				};
@@ -105,11 +94,8 @@ var generateMaze = function(givenX,givenY) {
 		};
 	};
 
-	// console.log(unproccessed);
-
 	while (maze.length > 1) {
 		var i = Math.floor(Math.random() * unproccessed.length);
-		// console.log('a ' + a);
 		var a = unproccessed[i][0];
 		var b = unproccessed[i][1]
 		unproccessed.splice(i,1);
@@ -121,9 +107,6 @@ var generateMaze = function(givenX,givenY) {
 		unproccessed.splice(0,1);
 	};
 
-	// console.log(unproccessed);
-	// console.log(maze);
-	// console.log(walls);
 	var index = 1
 	var table = $('#mazeTable');
 	table.html('');
@@ -133,21 +116,15 @@ var generateMaze = function(givenX,givenY) {
 			var tuple = $('<td>');
 			tuple.attr('id', index);
 			tuple.attr('class','cell');
-			// tuple.text(index);
 			index++;
 			row.append(tuple);
 		};
 		table.append(row);
-		// console.log(row);
 	};
 	for (var i = 0; i < walls.length; i++) {
-		// console.log(walls[i][0] +' '+ walls[i][1]);
-		// console.log(Math.min(walls[i][0] , walls[i][1]));
 		if ([-1,1].indexOf(walls[i][0] - walls[i][1]) != -1) {
-			// console.log('sameline');
 			$('#'+Math.min(walls[i][0] , walls[i][1])).css("border-right", "solid black 5px");
 		} else if ([-x,x].indexOf(walls[i][0] - walls[i][1]) != -1) {
-			// console.log('next line');
 			$('#'+Math.min(walls[i][0] , walls[i][1])).css("border-bottom", "solid black 5px");
 		};
 	};
@@ -166,29 +143,29 @@ var generateMaze = function(givenX,givenY) {
 	$('body').css('overflow', 'hidden');
 	mazeReady = true;
 	$('td').mouseover(function(){
-  	//console.log(this.id);
-  	if (mazeReady && mouseDown) {
-  		move(parseInt(this.id));
-  	};
+	  	if (mazeReady && mouseDown) {
+	  		move(parseInt(this.id));
+	  	};
 	});
+	
+	// working on a swip feature for mobile
 	// .bind('touchend', function(e) {
- //    e.preventDefault();
- //    //console.log(this.id);
- //    if (mazeReady) {
- //  		move(parseInt(this.id));
- //  	};
- //  }).bind('touchmove', function(e){
+	//    e.preventDefault();
+	//    //console.log(this.id);
+	//    if (mazeReady) {
+	//  		move(parseInt(this.id));
+	//  	};
+	//  }).bind('touchmove', function(e){
 	// 	e.preventDefault();
 	// 	//console.log("(" + e.originalEvent.changedTouches[0].pageX + ", " + e.originalEvent.changedTouches[0].pageY + ")");
 	// 	//console.log(document.elementFromPoint(e.originalEvent.changedTouches[0].pageX, e.originalEvent.changedTouches[0].pageY).id);
 	// 	if (mazeReady) {
- //  		move(parseInt(document.elementFromPoint(e.originalEvent.changedTouches[0].pageX, e.originalEvent.changedTouches[0].pageY).id));
- //  	};
+	//  		move(parseInt(document.elementFromPoint(e.originalEvent.changedTouches[0].pageX, e.originalEvent.changedTouches[0].pageY).id));
+	//  	};
 	// });
 }
 
 $(document).on('keydown', function(e) {
-	// console.log(e.keyCode);
 	if (mazeReady && [37,38,39,40].indexOf(e.keyCode) != -1) {
 		key(e.keyCode);
 	};
@@ -200,19 +177,15 @@ var key = function(k) {
 	var next;
 	switch (k) {
 		case 37:
-			// console.log('left');
 			next = current - 1;
 			break;
 		case 38:
-			// console.log('up');
 			next = current - x;
 			break;
 		case 39:
-			// console.log('right');
 			next = current + 1;
 			break;
 		case 40:
-			// console.log('down');
 			next = current + x;
 			break;
 	}
@@ -223,11 +196,7 @@ var move = function(next) {
 		var d = new Date();
 		startTime = d.getTime();
 	};
-	// console.log(next);
-	// console.log(arrayIndex(halls, [current,next]));
-	// console.log(arrayIndex(halls, [next,current]));
 	var can = (arrayIndex(halls, [current,next]) != -1 || arrayIndex(halls, [next,current]) != -1);
-	// console.log(can);
 	if (can) {
 		
 		$('#'+current).css('background-color', '#98FB98');
@@ -263,22 +232,6 @@ var end = function() {
 		});
 	vex.dialog.alert({
 	  message: 'You win!!! it took you only ' + ((endTime - startTime)/1000) + ' seconds and you made ' + points + ' mistake' + ((points == 1) ? '' : 's'),
-	  // + '<br>Woulds you like to save this to a username?' ,
-	  // placeholder: 'User Name',
-	  // callback: function(value) {
-	  // 	fb.child('usergames').child(value).push({
-	  //   	'start': startTime,
-			// 	'end': endTime,
-			// 	'time': ((endTime -startTime)/1000),
-			// 	'walls': walls,
-			// 	'halls': halls,
-			// 	'walked': walked,
-			// 	'points': points,
-			// 	'x':x,
-			// 	'y':y,
-			// 	'user':value
-			// });
-	  // }
 	});
 }
 
@@ -292,25 +245,17 @@ var find = function(a) {
 	};
 	return item;
 }
+
 var proccess = function(numA,numB) {
 	if (numA==numB) {return};
 	var a = find(numA);
 	var b = find(numB);
-	// console.log('----');
-	// console.log(numA);
-	// console.log(a);
-	// console.log(numB);
-	// console.log(b);
 	if (a === b) {
-		// console.log('wall');
 		walls.push([numA, numB]);
 	} else {
-		// console.log('hall');
 		halls.push([numA, numB]);
 		union(a,b);
-		// console.log(a);
 	};
-	// console.log('----');
 	return maze;	
 }
 var union = function(a,b) {
@@ -319,7 +264,6 @@ var union = function(a,b) {
 			a.push(b[i]);
 		};
 		maze.splice(maze.indexOf(b),1);
-		//remove(numB);
 	};
 	return maze;	
 }
