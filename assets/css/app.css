@@ -57,6 +57,6 @@ html, body, #bottom {
     border-color: white;
 }
 .nav-wrapper {
-    padding-left: 10%;
-    padding-right: 10%;
+    width: 90%;
+    margin: auto;
 }
