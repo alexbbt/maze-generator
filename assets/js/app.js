@@ -136,8 +136,13 @@ var generateMaze = function(givenX,givenY) {
 		$('#'+(i*x-(x-1))).css("border-left", "solid black 5px");
 		$('#'+(i*x)).css("border-right", "solid black 5px");
 	};
+	
+	// first square
 	$('#1').css("border-left", "0").css('background-color', 'green');
-	$('#'+squares).css("border-right", "0");
+	
+	// last square
+	$('#'+squares).css("border-right", "0").css('background-color', 'red');
+	
 	$('#top').slideUp();
 	$('#bottom').show();
 	$('body').css('overflow', 'hidden');
