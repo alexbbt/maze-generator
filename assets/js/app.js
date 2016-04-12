@@ -235,7 +235,7 @@ var end = function() {
 	if (minutes >= 1) {
 		time = time + minutes + ' minutes ';
 	}
-	seconds = (seconds - (minutes * 60) - (hours * 60 * 60));
+	seconds = (Math.round((seconds - (minutes * 60) - (hours * 60 * 60)) * 100 ) / 100);
 	if (seconds >= 1) {
 		time = time + seconds + ' seconds ';
 	}
